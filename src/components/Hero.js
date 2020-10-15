@@ -1,14 +1,51 @@
 import React from 'react';
-
+import { Redirect } from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 // import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 import heroImg from '../assests/hero.png';
 import SignIn from './SignIn';
+import { URL } from '../variables';
 
-function Hero(){
-  return(
+class Hero extends React.Component{
+
+  constructor(){
+    super()
+    this.state = {
+      loggedIn: false
+    }
+  }
+
+  handleSignIn = ({username, password}) => {
+    fetch(URL+'/login', {
+      method: 'post',
+      header: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        username: username,
+        password: password,
+        clientId: '73gecKXtTSGCW1qsemzn'
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.error){
+        alert('Please Enter Valid Credentials')
+      }
+      else{
+        this.setState({loggedIn: true});
+        console.log(data)
+      }
+    })
+    .catch(err => {console.log('There has been a error in Hero.js handleSignIn Method\n'+err)})
+
+  }
+
+  render(){
+    if(this.state.loggedIn){
+      return (<Redirect to='/home' />)
+    }
+    return(
     <section id="hero">
       <div className="container">
         <div className="row">
@@ -16,7 +53,7 @@ function Hero(){
             <div data-aos="zoom-out">
               <Card style={{borderRadius: '25px', paddingBottom: '25px'}}>
                 <CardContent>
-                  <SignIn />
+                  <SignIn handleSignIn={this.handleSignIn}/>
 
                 </CardContent>
               </Card>
@@ -66,7 +103,8 @@ function Hero(){
       </svg>
     </section>
 
-  )
+    )
+  }
 }
 
 export default Hero;

@@ -11,8 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,8 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(props) {
   const classes = useStyles();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
     <Container component="main" maxWidth="xs">
@@ -53,11 +54,11 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="username"
             label="Username"
-            name="email"
-            autoComplete="email"
+            name="username"
             autoFocus
+            onChange={(event) => setUsername(event.target.value)}
           />
           <TextField
             variant="outlined"
@@ -69,6 +70,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(event) => setPassword(event.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -80,6 +82,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={(event) => {event.preventDefault(); props.handleSignIn({username: username, password: password})}}
           >
             Sign In
           </Button>
