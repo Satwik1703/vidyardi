@@ -7,6 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import heroImg from '../assests/hero.png';
 import SignIn from './SignIn';
 import { URL } from '../variables';
+import { connect } from 'react-redux';
+import { setUserDetails, setMenuItems } from '../redux/user.actions';
 
 class Hero extends React.Component{
 
@@ -22,8 +24,8 @@ class Hero extends React.Component{
       method: 'post',
       header: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        username: username,
-        password: password,
+        username: 'sudhakar',
+        password: 'aW5ub0AzMjE=',
         clientId: '73gecKXtTSGCW1qsemzn'
       })
     })
@@ -33,8 +35,9 @@ class Hero extends React.Component{
         alert('Please Enter Valid Credentials')
       }
       else{
+        this.props.setMenuItems(data.validMenuItem);
+        this.props.setUserDetails(data.validUserDetails);
         this.setState({loggedIn: true});
-        console.log(data)
       }
     })
     .catch(err => {console.log('There has been a error in Hero.js handleSignIn Method\n'+err)})
@@ -107,4 +110,9 @@ class Hero extends React.Component{
   }
 }
 
-export default Hero;
+const mapDispatchToProps = dispatch => ({
+  setUserDetails: data => dispatch(setUserDetails(data)),
+  setMenuItems: data => dispatch(setMenuItems(data))
+})
+
+export default connect(null, mapDispatchToProps)(Hero);
